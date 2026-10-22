@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{14ea0d61-93d9-4ffb-9eb7-69deb1c868ad}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ag_conversationid" select="1" icon="1" preview="1">
+        <row name="result" id="ag_tbl_conversationid">
+          <cell name="ag_conversationid" width="300" />
+          <cell name="createdon" width="125" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>1</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ag_tbl_conversation">
+          <attribute name="ag_tbl_conversationid" />
+          <attribute name="ag_conversationid" />
+          <attribute name="createdon" />
+          <order attribute="ag_conversationid" descending="false" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="tbl_Conversation Advanced Find View" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

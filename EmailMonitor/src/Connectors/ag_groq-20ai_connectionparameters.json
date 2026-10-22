@@ -1,0 +1,1 @@
+{"api_key":{"type":"securestring","uiDefinition":{"displayName":"Groq API Key","description":"The Groq API Key for this api","tooltip":"Provide your Groq API Key","constraints":{"tabIndex":2,"clearText":false,"required":"true"}}}}

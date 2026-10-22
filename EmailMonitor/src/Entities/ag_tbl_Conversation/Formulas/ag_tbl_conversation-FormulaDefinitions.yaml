@@ -1,0 +1,5 @@
+cr240_totaldays: |-
+    =If(
+        !IsBlank(ag_closeddate),
+        DateDiff(createdon, ag_closeddate, TimeUnit.Days)
+    )

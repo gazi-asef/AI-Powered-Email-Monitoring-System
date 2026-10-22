@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{23f33105-a83f-4a45-aa0f-033b4bd17fbc}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ag_attachmentid" select="1" icon="1" preview="1">
+        <row name="result" id="ag_tbl_attachmentid">
+          <cell name="ag_attachmentid" width="300" />
+          <cell name="ag_messageid" width="150" />
+          <cell name="ag_filename" width="150" />
+          <cell name="ag_filetype" width="150" />
+          <cell name="ag_uploadedon" width="150" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ag_tbl_attachment">
+          <attribute name="ag_tbl_attachmentid" />
+          <attribute name="ag_attachmentid" />
+          <attribute name="createdon" />
+          <order attribute="ag_attachmentid" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="ag_messageid" />
+          <attribute name="ag_filename" />
+          <attribute name="ag_filetype" />
+          <attribute name="ag_uploadedon" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Active tbl_Attachments" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

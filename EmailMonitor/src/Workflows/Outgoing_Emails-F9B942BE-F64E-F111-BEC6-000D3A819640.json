@@ -1,0 +1,404 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_office365_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "ag_EMOffice365OutlookConnection"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      },
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "ag_EMDataverseConnection"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_conversionservice": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "new_sharedconversionservice_9c682"
+        },
+        "api": {
+          "name": "shared_conversionservice"
+        }
+      },
+      "shared_groq-20ai-5f1891d788def0a3f1-5fc52d4d246510971a-1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "new_sharedgroq20ai5f1891d788def0a3f15fc52d4d246510971a_b2b66"
+        },
+        "api": {
+          "name": "shared_groq-20ai-5f1891d788def0a3f1-5fc52d4d246510971a",
+          "logicalName": "ag_groq-20ai"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "When_a_new_email_arrives_(V3)": {
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "Id::AQMkADU4ZjAxMDYzLTk0MzItNDc3AGUtOGE5YS01ZmU5ZjU2YmE3NTcALgAAA0olzBuVStlKoctTP3hj6jABAJsVuH7bVt1Oi70cXN8fYHAAAAIBCQAAAA==": "Sent Items",
+            "operationMetadataId": "9e931431-ac7d-49eb-a85b-b0d75ea056fb",
+            "Id::AAMkAGIyNTAxMmM0LWViMWEtNDkzZi1hODlmLWU5OWVlMGY1MDQ3YgAuAAAAAABxCVe9P_TcT4aSr_fHeCDQAQBCUQz7RJUVQIR_9DNOALfrAAAAAAEJAAA=": "Sent Items",
+            "Id::AAMkAGIyNTAxMmM0LWViMWEtNDkzZi1hODlmLWU5OWVlMGY1MDQ3YgAuAAAAAABxCVe9P_TcT4aSr_fHeCDQAQBCUQz7RJUVQIR_9DNOALfrAAAAAAEMAAA=": "Inbox"
+          },
+          "type": "OpenApiConnectionNotification",
+          "inputs": {
+            "parameters": {
+              "to": "asef@presalesforce.onmicrosoft.com",
+              "includeAttachments": false,
+              "importance": "Any",
+              "fetchOnlyWithAttachment": false,
+              "folderPath": "Id::AAMkAGIyNTAxMmM0LWViMWEtNDkzZi1hODlmLWU5OWVlMGY1MDQ3YgAuAAAAAABxCVe9P_TcT4aSr_fHeCDQAQBCUQz7RJUVQIR_9DNOALfrAAAAAAEJAAA="
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "operationId": "OnNewEmailV3",
+              "connectionName": "shared_office365_1"
+            }
+          }
+        }
+      },
+      "actions": {
+        "List_rows": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "341c54b4-a75d-4744-bfb7-ebd783037c24"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "entityName": "ag_tbl_conversations",
+              "$filter": "ag_conversationid eq '@{triggerOutputs()?['body/conversationId']}'"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "connectionName": "shared_commondataserviceforapps_1"
+            }
+          }
+        },
+        "Condition": {
+          "actions": {
+            "Add_a_new_row": {
+              "runAfter": {
+                "Update_a_row": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d2316f6b-1d50-4d5d-a524-46262c6b21d6"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "entityName": "ag_tbl_messages",
+                  "item/ag_ConversationId@odata.bind": "/ag_tbl_conversations(@{variables('varConversationId')})",
+                  "item/ag_direction": 120860001,
+                  "item/ag_inreplyto": "@triggerOutputs()?['body/replyTo']",
+                  "item/ag_internetmessageid": "@triggerOutputs()?['body/internetMessageId']",
+                  "item/ag_messagebody": "@outputs('Compose')",
+                  "item/ag_messageid": "@triggerOutputs()?['body/id']",
+                  "item/ag_senderemail": "@triggerOutputs()?['body/from']",
+                  "item/ag_senton": "@triggerOutputs()?['body/receivedDateTime']",
+                  "item/ag_supportreplyinminutes": "@outputs('ReplyInMinutes')"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "operationId": "CreateRecord",
+                  "connectionName": "shared_commondataserviceforapps_1"
+                }
+              }
+            },
+            "Set_variable": {
+              "metadata": {
+                "operationMetadataId": "f253e112-a390-4a4f-8a11-200cefd962d5"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "varConversationId",
+                "value": "@{first(outputs('List_rows')?['body/value'])?['ag_tbl_conversationid']}"
+              }
+            },
+            "Update_a_row": {
+              "runAfter": {
+                "Terminate_1": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b00f3ea3-0cfb-42bc-87f8-5f275d48f78c"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "entityName": "ag_tbl_conversations",
+                  "recordId": "@first(outputs('List_rows')?['body/value'])?['ag_tbl_conversationid']",
+                  "item/ag_lastmessagepreview": "@outputs('Compose')",
+                  "item/ag_lastmessagetime": "@triggerOutputs()?['body/receivedDateTime']",
+                  "item/ag_status": 120860003,
+                  "item/ag_supportreplycount": "@add(\r\n   int(first(body('List_rows')?['value'])?['ag_supportreplycount']),\r\n   1\r\n)"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "operationId": "UpdateOnlyRecord",
+                  "connectionName": "shared_commondataserviceforapps_1"
+                }
+              }
+            },
+            "Html_to_text": {
+              "runAfter": {
+                "ReplyInMinutes": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c498e6c0-44fa-4b78-b64f-d23acb894c12"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "Content": "<p>@{triggerOutputs()?['body/body']}</p>"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_conversionservice",
+                  "operationId": "HtmlToText",
+                  "connectionName": "shared_conversionservice"
+                }
+              }
+            },
+            "Compose": {
+              "runAfter": {
+                "Html_to_text": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "6d4851e5-a16e-473c-9737-e4bc4a43167e"
+              },
+              "type": "Compose",
+              "inputs": "@trim(\r\n first(\r\n   split(\r\n     body('Html_to_text'),\r\n     '--'\r\n   )\r\n )\r\n)"
+            },
+            "Apply_to_each": {
+              "foreach": "@triggerOutputs()?['body/attachments']",
+              "actions": {
+                "Add_a_new_row_2": {
+                  "metadata": {
+                    "operationMetadataId": "f3f58cbc-57b6-4788-8a01-217466f7a768"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "entityName": "ag_tbl_attachments",
+                      "item/ag_attachmentid": "@items('Apply_to_each')?['id']",
+                      "item/ag_filename": "@items('Apply_to_each')?['name']",
+                      "item/ag_filetype": "@items('Apply_to_each')?['contentType']",
+                      "item/ag_MessageId@odata.bind": "/ag_tbl_messages(@{outputs('Add_a_new_row')?['body/ag_tbl_messageid']})",
+                      "item/ag_uploadedon": "@triggerOutputs()?['body/receivedDateTime']"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                      "operationId": "CreateRecord",
+                      "connectionName": "shared_commondataserviceforapps_1"
+                    }
+                  }
+                },
+                "Upload_a_file_or_an_image": {
+                  "runAfter": {
+                    "Add_a_new_row_2": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "a9faa6bb-3a3d-4993-949f-65a39af4ce09"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "x-ms-file-name": "Untitled",
+                      "entityName": "ag_tbl_attachments",
+                      "recordId": "@outputs('Add_a_new_row_2')?['body/ag_tbl_attachmentid']",
+                      "fileImageFieldName": "ag_filecontent",
+                      "item": "@items('Apply_to_each')?['contentBytes']"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                      "operationId": "UpdateEntityFileImageFieldContent",
+                      "connectionName": "shared_commondataserviceforapps_1"
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Add_a_new_row": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "5756b3a4-20df-40af-81ba-82901cff7396"
+              },
+              "type": "Foreach"
+            },
+            "List_rows_2": {
+              "runAfter": {
+                "Set_variable": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "22467fdd-2795-4e7a-8eaf-1873322b33c0"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "entityName": "ag_tbl_messages",
+                  "$filter": "_ag_conversationid_value eq @{first(body('List_rows')?['value'])?['ag_tbl_conversationid']}",
+                  "$orderby": "ag_senton desc",
+                  "$top": 1
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "connectionName": "shared_commondataserviceforapps_1"
+                }
+              }
+            },
+            "ReplyInMinutes": {
+              "runAfter": {
+                "List_rows_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "f5d2116a-9b16-467c-b6e6-1f3c3dd839bc"
+              },
+              "type": "Compose",
+              "inputs": "@div(\r\n   sub(\r\n      ticks(triggerOutputs()?['body/receivedDateTime']),\r\n      ticks(first(body('List_rows_2')?['value'])?['ag_senton'])\r\n   ),\r\n   600000000\r\n)"
+            },
+            "Generate_Chat_Completion": {
+              "runAfter": {
+                "Compose": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "Content-Type": "application/json",
+                  "body/model": "openai/gpt-oss-120b",
+                  "body/messages": [
+                    {
+                      "role": "system",
+                      "content": "You are a customer-message sentiment classifier.\n\nClassify the customer message into EXACTLY ONE of these categories:\n\nHappy\nSatisfied\nNeutral\nFrustrated\nConfused\nAngry\n\nReturn ONLY the category name.\nDo not provide an explanation."
+                    },
+                    {
+                      "role": "user",
+                      "content": "@outputs('Compose')"
+                    }
+                  ],
+                  "body/temperature": 0,
+                  "body/max_completion_tokens": 100,
+                  "body/reasoning_effort": "low",
+                  "body/include_reasoning": false
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_groq-20ai-5f1891d788def0a3f1-5fc52d4d246510971a",
+                  "operationId": "ChatCompletion",
+                  "connectionName": "shared_groq-20ai-5f1891d788def0a3f1-5fc52d4d246510971a-1"
+                }
+              }
+            },
+            "Compose_1": {
+              "runAfter": {
+                "Generate_Chat_Completion": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Compose",
+              "inputs": "@body('Generate_Chat_Completion')?['choices']?[0]?['message']?['content']"
+            },
+            "Terminate_1": {
+              "runAfter": {
+                "Compose_1": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Terminate",
+              "inputs": {
+                "runStatus": "Cancelled"
+              }
+            }
+          },
+          "runAfter": {
+            "List_rows": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Terminate": {
+                "metadata": {
+                  "operationMetadataId": "7ae632f4-f6c3-4846-a191-d0d7b35b6e19"
+                },
+                "type": "Terminate",
+                "inputs": {
+                  "runStatus": "Cancelled"
+                }
+              }
+            }
+          },
+          "expression": {
+            "greater": [
+              "@length(body('List_rows')?['value'])",
+              0
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e36275f5-53c1-4db3-910a-c2ce496b491e"
+          },
+          "type": "If"
+        },
+        "Initialize_variable": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "77e615ef-4d98-48ce-a47f-433b81f268d9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varConversationId",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

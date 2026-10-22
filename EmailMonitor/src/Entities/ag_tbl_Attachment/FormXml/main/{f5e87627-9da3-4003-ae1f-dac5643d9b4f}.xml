@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{f5e87627-9da3-4003-ae1f-dac5643d9b4f}</formid>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{B200D366-3104-48F1-BDC4-D591F49C49E9}" IsUserDefined="1">
+          <labels>
+            <label description="General" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="false" showbar="false" IsUserDefined="0" id="{58A33CAA-3AA2-4AE4-A2E0-E0B956E7A531}">
+                  <labels>
+                    <label description="General" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{46BC424A-A5D6-4700-8AFD-B119418702EC}">
+                        <labels>
+                          <label description="" languagecode="1033" />
+                        </labels>
+                        <control id="ag_attachmentid" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="ag_AttachmentId" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{788506FE-CC49-4375-9918-963BB47970ED}">
+                        <labels>
+                          <label description="Owner" languagecode="1033" />
+                        </labels>
+                        <control id="ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ownerid" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{93ffa2ee-bdb7-4ca7-9e78-4d598f8983f4}">
+                        <labels>
+                          <label description="MessageId" languagecode="1033" />
+                        </labels>
+                        <control id="ag_messageid" classid="{270bd3db-d9af-4782-9025-509e298dec0a}" datafieldname="ag_messageid" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{daa674f3-6208-4190-92ef-3ef45f22875c}">
+                        <labels>
+                          <label description="FileName" languagecode="1033" />
+                        </labels>
+                        <control id="ag_filename" classid="{4273edbd-ac1d-40d3-9fb2-095c621b552d}" datafieldname="ag_filename" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{db38e010-ece9-4702-b3f4-c8d35e14a934}">
+                        <labels>
+                          <label description="FileType" languagecode="1033" />
+                        </labels>
+                        <control id="ag_filetype" classid="{4273edbd-ac1d-40d3-9fb2-095c621b552d}" datafieldname="ag_filetype" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{26920af0-7ab7-4d01-b854-5db9ac74c756}">
+                        <labels>
+                          <label description="UploadedOn" languagecode="1033" />
+                        </labels>
+                        <control id="ag_uploadedon" classid="{5b773807-9fb2-42db-97c3-7a91eff8adff}" datafieldname="ag_uploadedon" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Information" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="A form for this entity." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>

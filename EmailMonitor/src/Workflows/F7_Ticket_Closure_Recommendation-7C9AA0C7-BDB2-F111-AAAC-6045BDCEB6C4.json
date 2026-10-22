@@ -1,0 +1,280 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_groq-20ai-5f1891d788def0a3f1-5fc52d4d246510971a": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "ag_EMGroqAIConnection"
+        },
+        "api": {
+          "name": "shared_groq-20ai-5f1891d788def0a3f1-5fc52d4d246510971a",
+          "logicalName": "ag_groq-20ai"
+        }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "new_sharedcommondataserviceforapps_5fefa"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "b3b75082-54ad-40ca-8e29-7e29601e5cf0"
+          },
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "description": "Please enter your input",
+                  "title": "TicketId",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_1": {
+                  "description": "Please enter your input",
+                  "title": "SupportRemark",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_2": {
+                  "description": "Please enter your input",
+                  "title": "TicketConversation",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_3": {
+                  "description": "Please enter your input",
+                  "title": "RowID",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "text",
+                "text_1",
+                "text_2",
+                "text_3"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Generate_Chat_Completion": {
+          "runAfter": {
+            "Row_ID": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "body/model": "openai/gpt-oss-120b",
+              "body/messages": [
+                {
+                  "role": "system",
+                  "content": "You are an AI reviewer for a customer support ticket management system.\n\nYour task is to review the customer conversation and the support person's remark and recommend whether the ticket is ready to be closed.\n\nRules:\n- Return Yes only when the customer's issue appears resolved and there is no obvious pending action.\n- Return No when the issue is unresolved, pending, unclear, or there is insufficient information.\n- Do not assume that customer silence means the issue is resolved.\n- Do not make assumptions that are not supported by the conversation.\n- The AI recommendation is only a recommendation. The Team Leader will make the final closure decision.\n\nReturn ONLY valid JSON using exactly this format:\n\n{\n  \"recommendation\": \"Short explanation of why the ticket should or should not be closed.\",\n  \"decision\": \"Yes\"\n}\n\nThe decision must be exactly Yes or No."
+                },
+                {
+                  "role": "user",
+                  "content": "Ticket ID : @{triggerBody()?['text']}\n\nConversation : @{triggerBody()?['text_2']}\n\nSupport Remarks : @{triggerBody()?['text_1']}"
+                }
+              ],
+              "body/temperature": 0,
+              "body/max_completion_tokens": 1000,
+              "body/reasoning_effort": "medium",
+              "body/include_reasoning": false
+            },
+            "host": {
+              "apiId": "",
+              "operationId": "ChatCompletion",
+              "connectionName": "shared_groq-20ai-5f1891d788def0a3f1-5fc52d4d246510971a"
+            }
+          }
+        },
+        "AI_Response_Content": {
+          "runAfter": {
+            "Generate_Chat_Completion": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@body('Generate_Chat_Completion')?['choices']?[0]?['message']?['content']"
+        },
+        "Parse_JSON": {
+          "runAfter": {
+            "AI_Response_Content": [
+              "Succeeded"
+            ]
+          },
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@outputs('AI_Response_Content')",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "recommendation": {
+                  "type": "string"
+                },
+                "decision": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "recommendation",
+                "decision"
+              ]
+            }
+          }
+        },
+        "AI_Decision": {
+          "runAfter": {
+            "AI_Recommendation": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@body('Parse_JSON')['decision']"
+        },
+        "AI_Recommendation": {
+          "runAfter": {
+            "Parse_JSON": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@body('Parse_JSON')['recommendation']"
+        },
+        "Condition": {
+          "actions": {
+            "Update_a_row": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "entityName": "ag_tbl_conversations",
+                  "recordId": "@outputs('Row_ID')",
+                  "item/ag_aidecision": true,
+                  "item/ag_airecommendation": "@outputs('AI_Recommendation')",
+                  "item/cr240_closurerequestdate": "@convertTimeZone(\r\n            utcNow(),\r\n            'UTC',\r\n            'India Standard Time'\r\n        )",
+                  "item/cr240_closurerequestdatekey": "@outputs('ClosureDatekey')",
+                  "item/cr240_closurerequestday": "@int(\r\n            formatDateTime(\r\n                convertTimeZone(\r\n                    utcNow(),\r\n                    'UTC',\r\n                    'India Standard Time'\r\n                ),\r\n                'dd'\r\n            )\r\n        )",
+                  "item/cr240_closurerequestmonth": "@int(\r\n            formatDateTime(\r\n                convertTimeZone(\r\n                    utcNow(),\r\n                    'UTC',\r\n                    'India Standard Time'\r\n                ),\r\n                'MM'\r\n            )\r\n        )",
+                  "item/cr240_closurerequestyear": "@int(\r\n            formatDateTime(\r\n                convertTimeZone(\r\n                    utcNow(),\r\n                    'UTC',\r\n                    'India Standard Time'\r\n                ),\r\n                'yyyy'\r\n            )\r\n        )",
+                  "item/ag_status": 805530001
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "operationId": "UpdateOnlyRecord",
+                  "connectionName": "shared_commondataserviceforapps"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "ClosureDatekey": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Update_a_row_1": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "entityName": "ag_tbl_conversations",
+                    "recordId": "@outputs('Row_ID')",
+                    "item/ag_aidecision": false,
+                    "item/ag_airecommendation": "@outputs('AI_Recommendation')",
+                    "item/cr240_closurerequestdate": "@utcNow()",
+                    "item/cr240_closurerequestdatekey": "@outputs('ClosureDatekey')",
+                    "item/cr240_closurerequestday": "@int(formatDateTime(utcNow(), 'dd'))",
+                    "item/cr240_closurerequestmonth": "@int(formatDateTime(utcNow(), 'MM'))",
+                    "item/cr240_closurerequestyear": "@int(formatDateTime(utcNow(), 'yyyy'))",
+                    "item/ag_status": 805530001
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                    "operationId": "UpdateOnlyRecord",
+                    "connectionName": "shared_commondataserviceforapps"
+                  }
+                }
+              }
+            }
+          },
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@outputs('AI_Decision')",
+                  "Yes"
+                ]
+              }
+            ]
+          },
+          "type": "If"
+        },
+        "List_rows": {
+          "runAfter": {},
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "entityName": "ag_tbl_conversations",
+              "$filter": "cr5db_ticketid eq '@{triggerBody()?['text']}'",
+              "$top": 1
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "connectionName": "shared_commondataserviceforapps"
+            }
+          }
+        },
+        "Row_ID": {
+          "runAfter": {
+            "List_rows": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@first(body('List_rows')?['value'])?['ag_tbl_conversationid']"
+        },
+        "ClosureDatekey": {
+          "runAfter": {
+            "AI_Decision": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@int(\r\n    formatDateTime(\r\n        convertTimeZone(\r\n            utcNow(),\r\n            'UTC',\r\n            'India Standard Time'\r\n        ),\r\n        'yyyyMMdd'\r\n    )\r\n)"
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

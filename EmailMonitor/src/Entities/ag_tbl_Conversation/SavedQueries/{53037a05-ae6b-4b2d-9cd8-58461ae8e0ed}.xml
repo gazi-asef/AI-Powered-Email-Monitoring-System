@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{53037a05-ae6b-4b2d-9cd8-58461ae8e0ed}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ag_conversationid" select="1" icon="1" preview="1">
+        <row name="result" id="ag_tbl_conversationid">
+          <cell name="ag_conversationid" width="300" />
+          <cell name="ag_subject" width="150" />
+          <cell name="ag_customeremail" width="150" />
+          <cell name="ag_lastmessagepreview" width="150" />
+          <cell name="ag_lastmessagetime" width="150" />
+          <cell name="ag_status" width="150" />
+          <cell name="ag_assigendto" width="150" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ag_tbl_conversation">
+          <attribute name="ag_tbl_conversationid" />
+          <attribute name="ag_conversationid" />
+          <attribute name="createdon" />
+          <order attribute="ag_conversationid" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="ag_subject" />
+          <attribute name="ag_customeremail" />
+          <attribute name="ag_lastmessagepreview" />
+          <attribute name="ag_lastmessagetime" />
+          <attribute name="ag_status" />
+          <attribute name="ag_assigendto" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Active tbl_Conversations" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

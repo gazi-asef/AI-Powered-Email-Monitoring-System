@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>1</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{b1f14da5-307d-493a-a2fa-d041e7eafe35}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ag_attachmentid" select="1" icon="1" preview="1">
+        <row name="result" id="ag_tbl_attachmentid">
+          <cell name="ag_attachmentid" width="300" />
+          <cell name="createdon" width="125" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>4</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ag_tbl_attachment">
+          <attribute name="ag_tbl_attachmentid" />
+          <attribute name="ag_attachmentid" />
+          <attribute name="createdon" />
+          <order attribute="ag_attachmentid" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <filter type="or" isquickfindfields="1">
+            <condition attribute="ag_attachmentid" operator="like" value="{0}" />
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Quick Find Active tbl_Attachments" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

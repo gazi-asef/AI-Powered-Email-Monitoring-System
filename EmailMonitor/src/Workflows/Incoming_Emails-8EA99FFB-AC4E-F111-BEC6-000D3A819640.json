@@ -1,0 +1,668 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "ag_EMDataverseConnection"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_conversionservice": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "new_sharedconversionservice_9c682"
+        },
+        "api": {
+          "name": "shared_conversionservice"
+        }
+      },
+      "shared_conversionservice-1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "new_sharedconversionservice_64a60"
+        },
+        "api": {
+          "name": "shared_conversionservice"
+        }
+      },
+      "shared_office365_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "ag_EMOffice365OutlookConnection"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_new_email_arrives_(V3)": {
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "Id::AQMkADU4ZjAxMDYzLTk0MzItNDc3AGUtOGE5YS01ZmU5ZjU2YmE3NTcALgAAA0olzBuVStlKoctTP3hj6jABAJsVuH7bVt1Oi70cXN8fYHAAAAIBDAAAAA==": "Inbox",
+            "operationMetadataId": "f5667630-9d72-46ee-b8a4-10000f49f4ef"
+          },
+          "type": "OpenApiConnectionNotification",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_office365_1",
+              "operationId": "OnNewEmailV3",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+            },
+            "parameters": {
+              "folderPath": "Id::AQMkADU4ZjAxMDYzLTk0MzItNDc3AGUtOGE5YS01ZmU5ZjU2YmE3NTcALgAAA0olzBuVStlKoctTP3hj6jABAJsVuH7bVt1Oi70cXN8fYHAAAAIBDAAAAA=="
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Initialize_variable": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "0168d6c0-d957-4be6-8007-f54db9b25bb3"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varConversationId",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_1": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "59d99698-7446-4753-a75a-66bd97ffbe91"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varMessageId",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Condition_2": {
+          "actions": {
+            "Terminate": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "0e75bdad-1128-4572-9954-a80bc1bf0b0e"
+              },
+              "type": "Terminate",
+              "inputs": {
+                "runStatus": "Cancelled"
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_variable_2": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "List_rows": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "27bbdb9d-65be-43f3-b7f4-31ec298cebd6"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps_1",
+                    "operationId": "ListRecords",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "ag_tbl_conversations",
+                    "$filter": "ag_conversationid eq '@{triggerOutputs()?['body/conversationId']}'"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              },
+              "Condition": {
+                "actions": {
+                  "Set_variable": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "b6dee1a2-2b14-4d67-8122-7e6437ed79a9"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "varConversationId",
+                      "value": "@{first(outputs('List_rows')?['body/value'])?['ag_tbl_conversationid']}"
+                    }
+                  },
+                  "Add_a_new_row_3": {
+                    "runAfter": {
+                      "Update_a_row": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "47fa91f1-6ea1-4542-b315-f020355581ad"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps_1",
+                        "operationId": "CreateRecord",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "entityName": "ag_tbl_messages",
+                        "item/ag_ConversationId@odata.bind": "/ag_tbl_conversations(@{variables('varConversationId')})",
+                        "item/ag_direction": 120860000,
+                        "item/ag_internetmessageid": "@triggerOutputs()?['body/internetMessageId']",
+                        "item/ag_messagebody": "@outputs('Compose')",
+                        "item/ag_messageid": "@triggerOutputs()?['body/id']",
+                        "item/ag_senderemail": "@triggerOutputs()?['body/from']",
+                        "item/cr5db_sentimenttext": "@outputs('Run_a_prompt_2')?['body/responsev2/predictionOutput/text']",
+                        "item/ag_senton": "@triggerOutputs()?['body/receivedDateTime']"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Set_variable_3": {
+                    "runAfter": {
+                      "Add_a_new_row_3": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "350ca66e-8451-4f4b-8cc0-e1382350abe6"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "varMessageId",
+                      "value": "@outputs('Add_a_new_row_3')?['body/ag_tbl_messageid']"
+                    }
+                  },
+                  "Apply_to_each_2": {
+                    "foreach": "@triggerOutputs()?['body/attachments']",
+                    "actions": {
+                      "Add_a_new_row_4": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "a6d76452-c3ac-4ce4-bef5-bbbbf1cfa05d"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_commondataserviceforapps_1",
+                            "operationId": "CreateRecord",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          },
+                          "parameters": {
+                            "entityName": "ag_tbl_attachments",
+                            "item/ag_attachmentid": "@items('Apply_to_each_2')?['id']",
+                            "item/ag_filename": "@items('Apply_to_each_2')?['name']",
+                            "item/ag_filetype": "@items('Apply_to_each_2')?['contentType']",
+                            "item/ag_MessageId@odata.bind": "/ag_tbl_messages(@{variables('varMessageId')})",
+                            "item/ag_uploadedon": "@triggerOutputs()?['body/receivedDateTime']"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      },
+                      "Upload_a_file_or_an_image_2": {
+                        "runAfter": {
+                          "Add_a_new_row_4": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "b14cbe23-74c1-40b1-a7c4-4e1668cec174"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_commondataserviceforapps_1",
+                            "operationId": "UpdateEntityFileImageFieldContent",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          },
+                          "parameters": {
+                            "entityName": "ag_tbl_attachments",
+                            "recordId": "@outputs('Add_a_new_row_4')?['body/ag_tbl_attachmentid']",
+                            "fileImageFieldName": "ag_filecontent",
+                            "item": "@items('Apply_to_each_2')?['contentBytes']",
+                            "x-ms-file-name": "Untitled"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Set_variable_3": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "1ec0e802-3acf-4e20-b7d2-3855e4bca2d0"
+                    },
+                    "type": "Foreach"
+                  },
+                  "Html_to_text_2": {
+                    "runAfter": {
+                      "Set_variable": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "34167074-177a-4b70-b3f3-efc53d938221"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_conversionservice",
+                        "operationId": "HtmlToText",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_conversionservice"
+                      },
+                      "parameters": {
+                        "Content": "<p>@{triggerOutputs()?['body/body']}</p>"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Compose": {
+                    "runAfter": {
+                      "Html_to_text_2": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "41d6be6a-a762-4d22-895e-8b1b6d46ed63"
+                    },
+                    "type": "Compose",
+                    "inputs": "@trim(\r\n first(\r\n   split(\r\n     body('Html_to_text_2'),\r\n     'On '\r\n   )\r\n )\r\n)"
+                  },
+                  "Update_a_row": {
+                    "runAfter": {
+                      "Run_a_prompt_2": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "5cebd9c0-b919-42dc-b16b-9095937ad270"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps_1",
+                        "operationId": "UpdateOnlyRecord",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "entityName": "ag_tbl_conversations",
+                        "recordId": "@first(body('List_rows')?['value'])?['ag_tbl_conversationid']",
+                        "item/ag_customerreplycount": "@add(\r\n   int(first(body('List_rows')?['value'])?['ag_customerreplycount']),\r\n   1\r\n)",
+                        "item/ag_lastmessagepreview": "@outputs('Compose')",
+                        "item/ag_lastmessagetime": "@triggerOutputs()?['body/receivedDateTime']",
+                        "item/cr5db_messagesentiment": "@outputs('Run_a_prompt_2')?['body/responsev2/predictionOutput/text']",
+                        "item/ag_status": 120860001,
+                        "item/ag_subject": "@triggerOutputs()?['body/subject']"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Run_a_prompt_2": {
+                    "runAfter": {
+                      "Compose": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "7b0b9b24-bf57-44be-89f8-7c79057fb943",
+                      "flowSystemMetadata": {
+                        "portalOperationApiDisplayNameOverride": "AI Builder",
+                        "portalOperationIconOverride": "https://content.powerapps.com/resource/makerx/static/pauto/images/designeroperations/aibuilderIcon2026.8e878397.png",
+                        "portalOperationBrandColorOverride": "#0A76C4",
+                        "portalOperationApiTierOverride": "Standard"
+                      }
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps_1",
+                        "operationId": "aibuilderpredict_customprompt",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "recordId": "2bcd7b94-50bc-4767-af4a-367c63fb5487",
+                        "item/requestv2/inputText": "@outputs('Compose')",
+                        "item/requestv2/inputCategories": "Happy\nSatisfied\nNeutral\nFrustrated\nConfused\nAngry",
+                        "item/requestv2/additionalContext": "Classify the customer message into exactly one category.\n\nCategories:\n- Happy\n- Satisfied\n- Neutral\n- Frustrated\n- Confused\n- Angry\n\nReturn only the category name.\nChoose the category that best matches the overall sentiment of the message."
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  }
+                },
+                "runAfter": {
+                  "List_rows": [
+                    "Succeeded"
+                  ]
+                },
+                "else": {
+                  "actions": {
+                    "Set_variable_1": {
+                      "runAfter": {
+                        "Add_a_new_row": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "407ec8b4-6240-4108-a044-c714db1b42f7"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "varConversationId",
+                        "value": "@trim(outputs('Add_a_new_row')?['body/ag_tbl_conversationid'])"
+                      }
+                    },
+                    "Add_a_new_row_1": {
+                      "runAfter": {
+                        "Set_variable_1": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "6065272b-834b-4d69-bfb2-0bcd4d1c5e5a"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "ag_tbl_messages",
+                          "item/ag_ConversationId@odata.bind": "/ag_tbl_conversations(@{variables('varConversationId')})",
+                          "item/ag_direction": 120860000,
+                          "item/ag_inreplyto": "@triggerOutputs()?['body/replyTo']",
+                          "item/ag_internetmessageid": "@triggerOutputs()?['body/internetMessageId']",
+                          "item/ag_messagebody": "@outputs('Compose_2')",
+                          "item/ag_messageid": "@triggerOutputs()?['body/id']",
+                          "item/ag_senderemail": "@triggerOutputs()?['body/from']",
+                          "item/cr5db_sentimenttext": "@outputs('Run_a_prompt')?['body/responsev2/predictionOutput/text']",
+                          "item/ag_senton": "@triggerOutputs()?['body/receivedDateTime']"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Set_variable_2": {
+                      "runAfter": {
+                        "Add_a_new_row_1": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "6467e664-eac7-4bc2-a13d-fac973ddbeca"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "varMessageId",
+                        "value": "@outputs('Add_a_new_row_1')?['body/ag_tbl_messageid']"
+                      }
+                    },
+                    "Apply_to_each": {
+                      "foreach": "@triggerOutputs()?['body/attachments']",
+                      "actions": {
+                        "Add_a_new_row_2": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "7012d337-8569-487e-8014-80cacbda5334"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps_1",
+                              "operationId": "CreateRecord",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "ag_tbl_attachments",
+                              "item/ag_attachmentid": "@items('Apply_to_each')?['id']",
+                              "item/ag_filename": "@item()?['name']",
+                              "item/ag_filetype": "@item()?['contentType']",
+                              "item/ag_MessageId@odata.bind": "/ag_tbl_messages(@{variables('varMessageId')})",
+                              "item/ag_uploadedon": "@triggerOutputs()?['body/receivedDateTime']"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        },
+                        "Upload_a_file_or_an_image": {
+                          "runAfter": {
+                            "Add_a_new_row_2": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "c84f218f-8d90-4a8e-8077-13275ae89153"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps_1",
+                              "operationId": "UpdateEntityFileImageFieldContent",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "ag_tbl_attachments",
+                              "recordId": "@outputs('Add_a_new_row_2')?['body/ag_tbl_attachmentid']",
+                              "fileImageFieldName": "ag_filecontent",
+                              "item": "@items('Apply_to_each')?['contentBytes']",
+                              "x-ms-file-name": "Untitled"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Set_variable_2": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "98282d0a-1c2e-4cd8-b634-36fe376a5943"
+                      },
+                      "type": "Foreach"
+                    },
+                    "List_rows_2": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "4c626b1a-5ac6-4cb7-84b4-0c05bec2206f"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "ListRecords",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "ag_tbl_users",
+                          "$filter": "ag_email eq '@{triggerOutputs()?['body/toRecipients']}'"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Html_to_text": {
+                      "runAfter": {
+                        "List_rows_2": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "e1a2ca4c-f2f6-4f07-af8e-59df69734bac"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_conversionservice-1",
+                          "operationId": "HtmlToText",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_conversionservice"
+                        },
+                        "parameters": {
+                          "Content": "<p class=\"editor-paragraph\">@{triggerOutputs()?['body/body']}</p>"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Compose_2": {
+                      "runAfter": {
+                        "Html_to_text": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "787f6430-c7d2-45df-b1d9-e8df76f132cd"
+                      },
+                      "type": "Compose",
+                      "inputs": "@trim(\r\n first(\r\n   split(\r\n     body('Html_to_text'),\r\n     'On '\r\n   )\r\n )\r\n)"
+                    },
+                    "Add_a_new_row": {
+                      "runAfter": {
+                        "Run_a_prompt": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "e9dc54ca-75f6-4726-8e19-f99c7773e8bc"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "ag_tbl_conversations",
+                          "item/ag_conversationid": "@triggerOutputs()?['body/conversationId']",
+                          "item/ag_createddate": "@utcNow()",
+                          "item/ag_customeremail": "@triggerOutputs()?['body/from']",
+                          "item/cr5db_customername": "@first(split(triggerOutputs()?['body/from'], '@'))",
+                          "item/ag_customerreplycount": 1,
+                          "item/ag_lastmessagepreview": "@outputs('Compose_2')",
+                          "item/ag_lastmessagetime": "@triggerOutputs()?['body/receivedDateTime']",
+                          "item/cr5db_messagesentiment": "@outputs('Run_a_prompt')?['body/responsev2/predictionOutput/text']",
+                          "item/ag_status": 120860000,
+                          "item/ag_subject": "@triggerOutputs()?['body/subject']",
+                          "item/ag_supportreplycount": 0
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Run_a_prompt": {
+                      "runAfter": {
+                        "Compose_2": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "d574585d-5e68-4528-987c-e1532ef9e587",
+                        "flowSystemMetadata": {
+                          "portalOperationApiDisplayNameOverride": "AI Builder",
+                          "portalOperationIconOverride": "https://content.powerapps.com/resource/makerx/static/pauto/images/designeroperations/aibuilderIcon2026.8e878397.png",
+                          "portalOperationBrandColorOverride": "#0A76C4",
+                          "portalOperationApiTierOverride": "Standard"
+                        }
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "aibuilderpredict_customprompt",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "recordId": "2bcd7b94-50bc-4767-af4a-367c63fb5487",
+                          "item/requestv2/inputText": "@outputs('Compose_2')",
+                          "item/requestv2/inputCategories": "Happy\nSatisfied\nNeutral\nFrustrated\nConfused\nAngry",
+                          "item/requestv2/additionalContext": "Classify the customer message into exactly one category.\n\nCategories:\n- Happy\n- Satisfied\n- Neutral\n- Frustrated\n- Confused\n- Angry\n\nReturn only the category name.\nChoose the category that best matches the overall sentiment of the message."
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  }
+                },
+                "expression": {
+                  "and": [
+                    {
+                      "greater": [
+                        "@length(body('List_rows')?['value'])",
+                        0
+                      ]
+                    }
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "283dc69e-b77b-47d7-8444-55c9ab7d6c8b"
+                },
+                "type": "If"
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@endsWith(\r\n   toLower(triggerOutputs()?['body/from']),\r\n   '@w4s7s.onmicrosoft.com'\r\n)",
+              true
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e64ceff8-3c5b-4721-9727-fb435553b830"
+          },
+          "type": "If"
+        },
+        "Initialize_variable_2": {
+          "runAfter": {
+            "Initialize_variable_1": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3b5394ef-1689-40c3-a4ae-834eb6a68ee3"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varSentiment",
+                "type": "integer"
+              }
+            ]
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

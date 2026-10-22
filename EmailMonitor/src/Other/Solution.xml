@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.26101.157" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" OrganizationVersion="9.2.26101.157" OrganizationSchemaType="Standard" CRMServerServiceabilityVersion="9.2.26101.00157">
+  <SolutionManifest>
+    <UniqueName>EmailMonitor</UniqueName>
+    <LocalizedNames>
+      <LocalizedName description="Email Monitor" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions />
+    <Version>1.0.0.1</Version>
+    <Managed>2</Managed>
+    <Publisher>
+      <UniqueName>Asef_Gazi</UniqueName>
+      <LocalizedNames>
+        <LocalizedName description="Asef Gazi" languagecode="1033" />
+      </LocalizedNames>
+      <Descriptions />
+      <EMailAddress xsi:nil="true"></EMailAddress>
+      <SupportingWebsiteUrl xsi:nil="true"></SupportingWebsiteUrl>
+      <CustomizationPrefix>ag</CustomizationPrefix>
+      <CustomizationOptionValuePrefix>12086</CustomizationOptionValuePrefix>
+      <Addresses>
+        <Address>
+          <AddressNumber>1</AddressNumber>
+          <AddressTypeCode>1</AddressTypeCode>
+          <City xsi:nil="true"></City>
+          <County xsi:nil="true"></County>
+          <Country xsi:nil="true"></Country>
+          <Fax xsi:nil="true"></Fax>
+          <FreightTermsCode xsi:nil="true"></FreightTermsCode>
+          <ImportSequenceNumber xsi:nil="true"></ImportSequenceNumber>
+          <Latitude xsi:nil="true"></Latitude>
+          <Line1 xsi:nil="true"></Line1>
+          <Line2 xsi:nil="true"></Line2>
+          <Line3 xsi:nil="true"></Line3>
+          <Longitude xsi:nil="true"></Longitude>
+          <Name xsi:nil="true"></Name>
+          <PostalCode xsi:nil="true"></PostalCode>
+          <PostOfficeBox xsi:nil="true"></PostOfficeBox>
+          <PrimaryContactName xsi:nil="true"></PrimaryContactName>
+          <ShippingMethodCode>1</ShippingMethodCode>
+          <StateOrProvince xsi:nil="true"></StateOrProvince>
+          <Telephone1 xsi:nil="true"></Telephone1>
+          <Telephone2 xsi:nil="true"></Telephone2>
+          <Telephone3 xsi:nil="true"></Telephone3>
+          <TimeZoneRuleVersionNumber xsi:nil="true"></TimeZoneRuleVersionNumber>
+          <UPSZone xsi:nil="true"></UPSZone>
+          <UTCOffset xsi:nil="true"></UTCOffset>
+          <UTCConversionTimeZoneCode xsi:nil="true"></UTCConversionTimeZoneCode>
+        </Address>
+        <Address>
+          <AddressNumber>2</AddressNumber>
+          <AddressTypeCode>1</AddressTypeCode>
+          <City xsi:nil="true"></City>
+          <County xsi:nil="true"></County>
+          <Country xsi:nil="true"></Country>
+          <Fax xsi:nil="true"></Fax>
+          <FreightTermsCode xsi:nil="true"></FreightTermsCode>
+          <ImportSequenceNumber xsi:nil="true"></ImportSequenceNumber>
+          <Latitude xsi:nil="true"></Latitude>
+          <Line1 xsi:nil="true"></Line1>
+          <Line2 xsi:nil="true"></Line2>
+          <Line3 xsi:nil="true"></Line3>
+          <Longitude xsi:nil="true"></Longitude>
+          <Name xsi:nil="true"></Name>
+          <PostalCode xsi:nil="true"></PostalCode>
+          <PostOfficeBox xsi:nil="true"></PostOfficeBox>
+          <PrimaryContactName xsi:nil="true"></PrimaryContactName>
+          <ShippingMethodCode>1</ShippingMethodCode>
+          <StateOrProvince xsi:nil="true"></StateOrProvince>
+          <Telephone1 xsi:nil="true"></Telephone1>
+          <Telephone2 xsi:nil="true"></Telephone2>
+          <Telephone3 xsi:nil="true"></Telephone3>
+          <TimeZoneRuleVersionNumber xsi:nil="true"></TimeZoneRuleVersionNumber>
+          <UPSZone xsi:nil="true"></UPSZone>
+          <UTCOffset xsi:nil="true"></UTCOffset>
+          <UTCConversionTimeZoneCode xsi:nil="true"></UTCConversionTimeZoneCode>
+        </Address>
+      </Addresses>
+    </Publisher>
+    <RootComponents>
+      <RootComponent type="1" schemaName="ag_tbl_attachment" behavior="0" />
+      <RootComponent type="1" schemaName="ag_tbl_conversation" behavior="0" />
+      <RootComponent type="1" schemaName="ag_tbl_message" behavior="0" />
+      <RootComponent type="1" schemaName="ag_tbl_user" behavior="0" />
+      <RootComponent type="29" id="{03d06162-5dbc-d46c-6c37-6d159be03a69}" behavior="0" />
+      <RootComponent type="29" id="{0eb5efaf-39a5-f111-aaac-6045bdceb6c4}" behavior="0" />
+      <RootComponent type="29" id="{49521bc5-0d9f-f111-b8de-00224818fd59}" behavior="0" />
+      <RootComponent type="29" id="{7c9aa0c7-bdb2-f111-aaac-6045bdceb6c4}" behavior="0" />
+      <RootComponent type="29" id="{8ea99ffb-ac4e-f111-bec6-000d3a819640}" behavior="0" />
+      <RootComponent type="29" id="{a0862668-a652-f111-bec6-6045bd5b4760}" behavior="0" />
+      <RootComponent type="29" id="{de3060fd-0fbf-f111-aaaf-6045bdceb6c4}" behavior="0" />
+      <RootComponent type="29" id="{f9b942be-f64e-f111-bec6-000d3a819640}" behavior="0" />
+      <RootComponent type="300" schemaName="ag_emailmonitor_57b79" behavior="0" />
+      <RootComponent type="372" id="{e09c1692-dacf-4ae8-b2c5-4ab4200c9522}" schemaName="ag_groq-20ai" behavior="0" />
+      <RootComponent type="9" schemaName="cr5db_role" behavior="0" />
+    </RootComponents>
+    <MissingDependencies>
+      <MissingDependency>
+        <Required type="401" displayName="AI Classify" solution="msdyn_AISolutionDefaultTemplates (202608.4.19.2)" id="{2bcd7b94-50bc-4767-af4a-367c63fb5487}">
+          <package appName="PowerAI" version="202608.4.19.2">msdyn_AISolutionAnchor (202608.4.19.2)</package>
+        </Required>
+        <Dependent type="29" displayName="Incoming_Emails" id="{8ea99ffb-ac4e-f111-bec6-000d3a819640}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="connectionreference" displayName="new_sharedgroq20ai5f1891d788def0a3f15fc52d4d246510971a_b2b66" solution="Active" id.connectionreferencelogicalname="new_sharedgroq20ai5f1891d788def0a3f15fc52d4d246510971a_b2b66" />
+        <Dependent type="29" displayName="F6_ReplyToMailMessage" id="{0eb5efaf-39a5-f111-aaac-6045bdceb6c4}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="connectionreference" displayName="new_sharedgroq20ai5f1891d788def0a3f15fc52d4d246510971a_b2b66" solution="Active" id.connectionreferencelogicalname="new_sharedgroq20ai5f1891d788def0a3f15fc52d4d246510971a_b2b66" />
+        <Dependent type="29" displayName="Incoming_Emails_V2" id="{49521bc5-0d9f-f111-b8de-00224818fd59}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="connectionreference" displayName="new_sharedgroq20ai5f1891d788def0a3f15fc52d4d246510971a_b2b66" solution="Active" id.connectionreferencelogicalname="new_sharedgroq20ai5f1891d788def0a3f15fc52d4d246510971a_b2b66" />
+        <Dependent type="29" displayName="Generate_ConversationSummary_Flow" id="{a0862668-a652-f111-bec6-6045bd5b4760}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="connectionreference" displayName="new_sharedgroq20ai5f1891d788def0a3f15fc52d4d246510971a_b2b66" solution="Active" id.connectionreferencelogicalname="new_sharedgroq20ai5f1891d788def0a3f15fc52d4d246510971a_b2b66" />
+        <Dependent type="29" displayName="Outgoing_Emails" id="{f9b942be-f64e-f111-bec6-000d3a819640}" />
+      </MissingDependency>
+    </MissingDependencies>
+  </SolutionManifest>
+</ImportExportXml>

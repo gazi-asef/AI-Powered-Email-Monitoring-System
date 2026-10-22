@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Connector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <connectorid>e09c1692-dacf-4ae8-b2c5-4ab4200c9522</connectorid>
+  <description>Custom connector for Groq Chat Completions API</description>
+  <displayname>Groq AI</displayname>
+  <iconbrandcolor>#007ee5</iconbrandcolor>
+  <name>ag_groq-20ai</name>
+  <connectortype>1</connectortype>
+  <openapidefinition>/Connector/ag_groq-20ai_openapidefinition.json</openapidefinition>
+  <connectionparameters>/Connector/ag_groq-20ai_connectionparameters.json</connectionparameters>
+  <policytemplateinstances>/Connector/ag_groq-20ai_policytemplateinstances.json</policytemplateinstances>
+  <iconblob>/Connector/ag_groq-20ai_iconblob.Png</iconblob>
+</Connector>

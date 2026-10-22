@@ -1,0 +1,163 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "ag_EMDataverseConnection"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "5fb88dd5-7f2d-41a9-8837-563fbbbc781c"
+          },
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "description": "Please enter your input",
+                  "title": "LastId",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "number": {
+                  "description": "Please enter a number",
+                  "title": "PageSize",
+                  "type": "number",
+                  "x-ms-content-hint": "NUMBER",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "required": [
+                "number"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Initialize_variable": {
+          "runAfter": {
+            "Initialize_variable_1": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2c3d8dbe-54dc-4258-b770-67e873104371"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varPageSize",
+                "type": "integer",
+                "value": 20
+              }
+            ]
+          }
+        },
+        "List_rows": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5d28bbb2-5e55-4f90-bf2e-5657b7427beb"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ag_tbl_conversations",
+              "$select": "ag_tbl_conversationid,ag_subject",
+              "$filter": "@if(empty(variables('varLastID')), 'ag_tbl_conversationid ne null', concat('ag_tbl_conversationid gt ', variables('varLastID')))",
+              "$orderby": "ag_tbl_conversationid asc",
+              "$top": 5
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_variable_1": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "98bb6a27-aca2-48fb-adf9-60041d5d7c35"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varLastID",
+                "type": "string",
+                "value": "@triggerBody()?['text']"
+              }
+            ]
+          }
+        },
+        "Respond_to_a_Power_App_or_flow": {
+          "runAfter": {
+            "List_rows": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "da1cb095-510d-43cd-9bc1-5a70aa9c85fe"
+          },
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "newlastid": "@{last(body('List_rows')?['value'])?['ag_tbl_conversationid']}",
+              "records": "@{string(body('List_rows')?['value'])}"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "newlastid": {
+                  "title": "newLastID",
+                  "x-ms-dynamically-added": true,
+                  "type": "string"
+                },
+                "records": {
+                  "title": "records",
+                  "x-ms-dynamically-added": true,
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

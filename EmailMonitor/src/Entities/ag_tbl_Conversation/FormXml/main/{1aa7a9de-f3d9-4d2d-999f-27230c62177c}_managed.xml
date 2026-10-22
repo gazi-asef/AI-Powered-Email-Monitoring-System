@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{1aa7a9de-f3d9-4d2d-999f-27230c62177c}</formid>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{0BFC77B6-4E97-413D-B7D8-E0120303FCB2}" IsUserDefined="1">
+          <labels>
+            <label description="General" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="false" showbar="false" IsUserDefined="0" id="{198208ED-58E9-4280-AE5B-0D9446DBA9F3}">
+                  <labels>
+                    <label description="General" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{9A9C27BD-F07D-4FDD-A712-D9A252E8669D}">
+                        <labels>
+                          <label description="" languagecode="1033" />
+                        </labels>
+                        <control id="ag_conversationid" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="ag_ConversationId" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{349803F9-8834-485E-AFB8-617130C84283}">
+                        <labels>
+                          <label description="Owner" languagecode="1033" />
+                        </labels>
+                        <control id="ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ownerid" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{d32885ea-143a-49cc-87f1-01e258f2c6c0}">
+                        <labels>
+                          <label description="Subject" languagecode="1033" />
+                        </labels>
+                        <control id="ag_subject" classid="{4273edbd-ac1d-40d3-9fb2-095c621b552d}" datafieldname="ag_subject" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{bcc0b3d0-7f56-4d9d-a688-17bbdadf96d3}">
+                        <labels>
+                          <label description="CustomerEmail" languagecode="1033" />
+                        </labels>
+                        <control id="ag_customeremail" classid="{4273edbd-ac1d-40d3-9fb2-095c621b552d}" datafieldname="ag_customeremail" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{79971c60-f163-4b64-b4d3-c2e139e88446}">
+                        <labels>
+                          <label description="LastMessagePreview" languagecode="1033" />
+                        </labels>
+                        <control id="ag_lastmessagepreview" classid="{e0dece4b-6fc8-4a8f-a065-082708572369}" datafieldname="ag_lastmessagepreview" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{e05baa37-8b9a-489e-bcd8-471802e65b19}">
+                        <labels>
+                          <label description="LastMessageTime" languagecode="1033" />
+                        </labels>
+                        <control id="ag_lastmessagetime" classid="{5b773807-9fb2-42db-97c3-7a91eff8adff}" datafieldname="ag_lastmessagetime" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{72db3b29-f0aa-4cf1-8269-39e23ee88db0}">
+                        <labels>
+                          <label description="Status" languagecode="1033" />
+                        </labels>
+                        <control id="ag_status" classid="{3ef39988-22bb-4f0b-bbbe-64b5a3748aee}" datafieldname="ag_status" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{31d38d92-6265-45d7-beb6-ce79d9489566}">
+                        <labels>
+                          <label description="AssigendTo" languagecode="1033" />
+                        </labels>
+                        <control id="ag_assigendto" classid="{270bd3db-d9af-4782-9025-509e298dec0a}" datafieldname="ag_assigendto" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Information" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="A form for this entity." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>

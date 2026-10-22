@@ -1,0 +1,279 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_groq-20ai-5f1891d788def0a3f1-5fc52d4d246510971a-1": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "new_sharedgroq20ai5f1891d788def0a3f15fc52d4d246510971a_b2b66"
+        },
+        "api": {
+          "name": "shared_groq-20ai-5f1891d788def0a3f1-5fc52d4d246510971a",
+          "logicalName": "ag_groq-20ai"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "undefined",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "311687fe-a40c-4b41-92ed-50bbc898aef5"
+          },
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "description": "Please enter your input",
+                  "title": "ConversationText",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_1": {
+                  "description": "Please enter your input",
+                  "title": "Mode",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "text_2": {
+                  "title": "Chat",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Please enter your input",
+                  "x-ms-content-hint": "TEXT"
+                }
+              },
+              "required": [
+                "text",
+                "text_1",
+                "text_2"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Initialize_variable": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "8dd0742e-87e6-4c1b-8ce6-00716e6f59da"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varConversationText",
+                "type": "string",
+                "value": "@triggerBody()?['text']"
+              }
+            ]
+          }
+        },
+        "Condition": {
+          "actions": {
+            "Set_variable": {
+              "runAfter": {
+                "Generate_Chat_Completion_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "990414c7-91b1-4ff3-90ca-a32de4247e49"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "varResponse",
+                "value": "@body('Generate_Chat_Completion_2')?['choices']?[0]?['message']?['content']"
+              }
+            },
+            "Generate_Chat_Completion_2": {
+              "metadata": {
+                "operationMetadataId": "063bdbe9-ec47-4812-8e85-5ed05b6eb375"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "Content-Type": "application/json",
+                  "body/model": "openai/gpt-oss-120b",
+                  "body/messages": [
+                    {
+                      "role": "system",
+                      "content": "You are an AI assistant for customer support conversations.\n\nAnswer the user's question using only the provided conversation.\n\nInstructions:\n- Keep answers short, clear, and natural.\n- Do not explain your reasoning.\n- Do not describe the conversation itself.\n- Avoid phrases like:\n  \"Based on the conversation\"\n  \"The conversation shows\"\n  \"The text mentions\"\n- If the information is unclear or missing, respond politely and naturally in your own words.\n- Do not make up information.\n\nConversation:\n@{variables('varConversationText')}\nQuestion:\n@{triggerBody()['text_2']}"
+                    },
+                    {
+                      "role": "user",
+                      "content": "You are an AI assistant for customer support conversations.\n\nAnswer the user's question using only the provided conversation.\n\nInstructions:\n- Keep answers short, clear, and natural.\n- Do not explain your reasoning.\n- Do not describe the conversation itself.\n- Avoid phrases like:\n  \"Based on the conversation\"\n  \"The conversation shows\"\n  \"The text mentions\"\n- If the information is unclear or missing, respond politely and naturally in your own words.\n- Do not make up information.\n\nConversation:\n@{variables('varConversationText')}\nQuestion:\n@{triggerBody()['text_2']}"
+                    }
+                  ],
+                  "body/temperature": 0,
+                  "body/max_completion_tokens": 2000,
+                  "body/reasoning_effort": "low",
+                  "body/include_reasoning": false
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_groq-20ai-5f1891d788def0a3f1-5fc52d4d246510971a",
+                  "operationId": "ChatCompletion",
+                  "connectionName": "shared_groq-20ai-5f1891d788def0a3f1-5fc52d4d246510971a-1"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_variable_3": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Generate_Chat_Completion": {
+                "metadata": {
+                  "operationMetadataId": "1fdbfea1-c724-45f4-99f7-c3697b23018b"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "Content-Type": "application/json",
+                    "body/model": "openai/gpt-oss-120b",
+                    "body/messages": [
+                      {
+                        "role": "system",
+                        "content": "Summarize this customer support conversation.\nProvide:\n1. Customer issue\n2. Support actions\n3. Final resolution\n4. Overall sentiment\nConversation:\n@{variables('varConversationText')}"
+                      },
+                      {
+                        "role": "user",
+                        "content": "@variables('varConversationText')"
+                      }
+                    ],
+                    "body/temperature": 0,
+                    "body/max_completion_tokens": 2000,
+                    "body/reasoning_effort": "low",
+                    "body/include_reasoning": false
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_groq-20ai-5f1891d788def0a3f1-5fc52d4d246510971a",
+                    "operationId": "ChatCompletion",
+                    "connectionName": "shared_groq-20ai-5f1891d788def0a3f1-5fc52d4d246510971a-1"
+                  }
+                }
+              },
+              "Set_variable_2": {
+                "runAfter": {
+                  "Generate_Chat_Completion": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "2a1f4cae-20b1-4bf8-b2a4-2168f4e09cb7"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "varResponse",
+                  "value": "@body('Generate_Chat_Completion')?['choices']?[0]?['message']?['content']"
+                }
+              }
+            }
+          },
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@variables('varMode')",
+                  "@'Chat'"
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c708c920-e721-4af9-9b5a-bc6efcb29f91"
+          },
+          "type": "If"
+        },
+        "Initialize_variable_2": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b7f06ec4-2265-4367-a961-a705975a5af4"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varResponse",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Respond_to_a_Power_App_or_flow": {
+          "runAfter": {
+            "Condition": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "595497dd-8249-440f-a723-62cf0e0544b3"
+          },
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "response": {
+                  "title": "Response",
+                  "x-ms-dynamically-added": true,
+                  "type": "string"
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "response": "@variables('varResponse')"
+            }
+          }
+        },
+        "Initialize_variable_3": {
+          "runAfter": {
+            "Initialize_variable_2": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "dbad1095-5eb1-495d-9e4a-2a2a04fd56c6"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varMode",
+                "type": "string",
+                "value": "@triggerBody()['text_1']"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

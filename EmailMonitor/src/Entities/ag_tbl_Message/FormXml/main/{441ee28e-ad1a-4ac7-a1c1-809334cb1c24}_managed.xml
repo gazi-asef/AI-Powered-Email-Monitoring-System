@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{441ee28e-ad1a-4ac7-a1c1-809334cb1c24}</formid>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{B6678ECF-8BBF-4D51-AED3-5B1663CDC829}" IsUserDefined="1">
+          <labels>
+            <label description="General" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="false" showbar="false" IsUserDefined="0" id="{574FCA9B-C69D-4CE3-98CD-803BF460EEF0}">
+                  <labels>
+                    <label description="General" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{1CBFABD5-96F9-4856-9432-E07EB952AC9B}">
+                        <labels>
+                          <label description="" languagecode="1033" />
+                        </labels>
+                        <control id="ag_messageid" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="ag_MessageId" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{7411206C-399F-4547-8923-60196A903DFB}">
+                        <labels>
+                          <label description="Owner" languagecode="1033" />
+                        </labels>
+                        <control id="ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ownerid" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{ab63f1d1-62d6-4873-a643-e5468d6ee429}">
+                        <labels>
+                          <label description="ConversationId" languagecode="1033" />
+                        </labels>
+                        <control id="ag_conversationid" classid="{270bd3db-d9af-4782-9025-509e298dec0a}" datafieldname="ag_conversationid" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{4f11d3ba-98cd-4a17-a1a5-5d02b7b75845}">
+                        <labels>
+                          <label description="InternetMessageId" languagecode="1033" />
+                        </labels>
+                        <control id="ag_internetmessageid" classid="{4273edbd-ac1d-40d3-9fb2-095c621b552d}" datafieldname="ag_internetmessageid" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{4a709af5-f812-4085-9a52-4deffd1f874a}">
+                        <labels>
+                          <label description="InReplyTo" languagecode="1033" />
+                        </labels>
+                        <control id="ag_inreplyto" classid="{4273edbd-ac1d-40d3-9fb2-095c621b552d}" datafieldname="ag_inreplyto" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{b603724b-2664-4fb8-8106-0f80bce105a0}">
+                        <labels>
+                          <label description="Direction" languagecode="1033" />
+                        </labels>
+                        <control id="ag_direction" classid="{3ef39988-22bb-4f0b-bbbe-64b5a3748aee}" datafieldname="ag_direction" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{1551faac-46d0-49e4-baa1-ce7315874cac}">
+                        <labels>
+                          <label description="SenderEmail" languagecode="1033" />
+                        </labels>
+                        <control id="ag_senderemail" classid="{4273edbd-ac1d-40d3-9fb2-095c621b552d}" datafieldname="ag_senderemail" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{6e0e21ef-563b-4360-b170-e83f6c241bb1}">
+                        <labels>
+                          <label description="MessageBody" languagecode="1033" />
+                        </labels>
+                        <control id="ag_messagebody" classid="{e0dece4b-6fc8-4a8f-a065-082708572369}" datafieldname="ag_messagebody" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{92c1b55a-650a-43ab-b9a3-5088c2c45898}">
+                        <labels>
+                          <label description="SentOn" languagecode="1033" />
+                        </labels>
+                        <control id="ag_senton" classid="{5b773807-9fb2-42db-97c3-7a91eff8adff}" datafieldname="ag_senton" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Information" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="A form for this entity." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>
