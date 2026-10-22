@@ -1,4 +1,4 @@
-# Email Monitoring and Ticket Management System
+# AI-Powered Email Monitoring and Ticket Management System
 
 A support ticket management application built using Microsoft Power Apps, Dataverse, Power Automate, and Groq AI.
 
