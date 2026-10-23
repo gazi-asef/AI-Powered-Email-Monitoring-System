@@ -55,7 +55,6 @@ I developed this project to make it easier for support teams to manage customer 
 
 ![Mobile AI Buddy](<docs/screenshots/mobile/Mobile View 27.jpg>)
 
-*Update the image paths above to match the actual screenshot filenames in your repository.*
 
 ## Technologies Used
 
